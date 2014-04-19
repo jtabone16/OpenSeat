@@ -48,7 +48,7 @@ class Location { loc =>
     }
 
     //Update number of available units when a unit is occupied
-    def occupyUnit: String = {
+    def occupyUnit{
       if (OccupiedUnits < NumUnits){
         OccupiedUnits+=1
         VacantUnits-=1
@@ -62,7 +62,7 @@ class Location { loc =>
     }//occupyUnit
 
     //Update number of available units when a unit is vacated
-    def vacateUnit: String = {
+    def vacateUnit{
       if (VacantUnits < NumUnits){
         VacantUnits+=1
         OccupiedUnits-=1
@@ -78,13 +78,13 @@ class Location { loc =>
   }//Unit
 
   //List of different units in each location
-  var units = scala.collection.mutable.ArrayBuffer[Unit]()
+  var units = scala.collection.mutable.Map[String, Unit]()
 
   //Define a new type of unit (e.g. computer, seat, treadmill, etc.)
   //and add to list of units in each location
   def newUnit(UnitType:String, NumUnits:Int): Unit = {
     val TempUnit = new Unit(UnitType, NumUnits)
-    units+=TempUnit
+    units(UnitType) = TempUnit
     TempUnit
   }
 
