@@ -1,5 +1,25 @@
 /* OpenSeat.scala
+ * 
+ * A backend GUI for an admin user of the OpenSeat service. OpenSeat uses crowdsourcing
+ * to track vacancies of 'units' in various public locations such as labs, libraries, gyms,
+ * coffee shops, etc. We used the Scala flavor of the Swing library to create a simple GUI.
  *
+ * With this GUI, one can add, edit, and view locations. Currently, we make sure location names
+ * are unique (we don't do so for location ID). When editing a location, you're not actually editing
+ * a location name or ID. But you can add a unit for each location. You can also occupy or vacate seats
+ * in 'Edit Location'. When doing so, a string with information about the available units in that specific
+ * location is outputted to Terminal. 
+ * 
+ * We had some issues with 'Edit Location', mainly with the window updating after making an edit. Our brute force 
+ * remedy involves using the back button and going back into the 'Edit Location' window. 
+ * 
+ * Also, we had issues saving our location and unit info after closing the program. There were certain 
+ * libraries that saved data structures, but the learning curve was quite steep for what we thought was a trivial
+ * matter in this project (considering that in production all of this would be handled with a database e.g. SQL, Redis, etc.)
+ *
+ * The creating and editing of locations and units is handled by OpenSeatClasses.scala which includes a Location class
+ * with a nested Unit class and a User class which will be implemented in a future version of the program. Since the use case
+ * of this GUI is for admins of the service, we focused more on manipulating locations and units rather than users.
  *
  * Created by John Tabone on 4/8/14
  */
@@ -62,40 +82,50 @@ import util.control.Breaks._
     text = "Back"
   }
 
+  //Default text field
   def newField = new TextField{
     text = " "
     columns = 15
   }
 
+  //Declarations of various text fields
   val locationName = newField
   val locationID = newField
   val unitType = newField
   val unitNum = newField
 
+  //Label for available seats
   var avail = new Label()
 
+  //Button groups to be used in the GUI
   new ButtonGroup(mainButtonList: _*)
   new ButtonGroup(locButtonList: _*)
 
+  //The top function is where all the magic happens when using Swing. Think of it 
+  //as a main() function
   def top = new MainFrame {
-    title = "OpenSeat Admin Panel"
-    size = new Dimension(200, 150)
-    peer.setLocationRelativeTo(null)
+    title = "OpenSeat Admin Panel"  //set title of the window
+    size = new Dimension(200, 150) //set dimensions of the window
+    peer.setLocationRelativeTo(null) //center the window 
 
+    //Add our main button list/group to our main window
     contents = new BoxPanel(Orientation.Horizontal) {
       contents ++= mainButtonList
       //contents += new FlowPanel(new Label("essss"))
       //background = Color.green
     }
 
-
+    //Add event listeners for each button group and button
     mainButtonList.foreach(listenTo(_))
     locButtonList.foreach(listenTo(_))
     listenTo(backLoc)
     listenTo(submitNewLoc)
 
+    //This is where we handle events
     reactions += {
+      //When button is clicked
       case ButtonClicked(button) => {
+        //case is the 'name' attribute of a button
         button.name match {
           
           case "loc" => {

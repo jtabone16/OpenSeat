@@ -1,9 +1,9 @@
 /* OpenSeatClasses.scala
  * 
- * 'Location' class declaration with 'Unit' class defined as
- *  an inner class.
+ * 'Location' class with 'Unit' class defined as an inner/nested class. Our GUI
+ *  interacts with these classes.
  *
- * 'User' class declaration.
+ * 'User' class which isn't used in this version of our backend GUI.
  *
  *  Created by John Tabone on 4/8/14
  */
